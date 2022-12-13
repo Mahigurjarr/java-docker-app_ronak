@@ -1,11 +1,11 @@
 pipeline {
 	agent {	
-		label 'pipeline-1'
+		label 'Slave_1'
 		}
 	stages {
 		stage("SCM") {
 			steps {
-				git 'https://github.com/wssrronak/java-docker-app.git'
+				git 'https://github.com/Mahigurjarr/java-docker-app_ronak.git'
 				}
 			}
 
@@ -18,23 +18,23 @@ pipeline {
 		stage("Image") {
 			steps {
 				sh 'sudo docker build -t java-repo:$BUILD_TAG .'
-				sh 'sudo docker tag java-repo:$BUILD_TAG srronak/pipeline-java:$BUILD_TAG'
+				sh 'sudo docker tag java-repo:$BUILD_TAG mahigurjarr/pipeline-java:$BUILD_TAG'
 				}
 			}
 				
 	
 		stage("Docker Hub") {
 			steps {
-			withCredentials([string(credentialsId: 'docker_hub_passwd', variable: 'docker_hub_password_var')]) {
-				sh 'sudo docker login -u srronak -p ${docker_hub_password_var}'
-				sh 'sudo docker push srronak/pipeline-java:$BUILD_TAG'
+			withCredentials([string(credentialsId: 'Docker_hub_mahi', variable: 'docker_hub_password_var')]) {
+				sh 'sudo docker login -u mahigurjarr -p ${docker_hub_password_var}'
+				sh 'sudo docker push mahigurjarr/pipeline-java:$BUILD_TAG'
 				}
 			}	
 
 		}
 		stage("QAT Testing") {
 			steps {
-				sh 'sudo docker run -dit -p 8080:8080 --name web11 srronak/pipeline-java:$BUILD_TAG'
+				sh 'sudo docker run -dit -p 8080:8080 --name web11 mahigurjarr/pipeline-java:$BUILD_TAG'
 				}
 			}
 	}
